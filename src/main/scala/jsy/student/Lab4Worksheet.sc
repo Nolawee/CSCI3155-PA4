@@ -25,3 +25,59 @@ parse("function (f: (y: number) => number, x: number) { return f(x) }")
 // Parse objects
 parse("{ f: 0, g: true }")
 parse("x.f")
+
+// Mapping ============================================================
+
+// Some fun functions for map!
+
+def timesTwo(num: Int): Int = num * 2
+def appendYes(str: String): String = str + "Yes"
+
+// Multiply every value in a list by some factor
+def scaleList(list: List[Double], factor: Double): List[Double] = list match {
+  case Nil => list
+  case head::tail => head*factor::scaleList(tail,factor)
+}
+
+// Apply some function to every element in a list
+def ourMap[A](f: A=>A)(l: List[A]): List[A] = l match {
+  case Nil => Nil
+  case head::tail => f(head)::ourMap(f)(tail)
+}
+
+var ours = ourMap(timesTwo)(List(1,2,3,4))
+val labrary_version = List(1,2,3,4) map timesTwo
+
+// Folding =============================================================
+
+// Some fun functions for fold
+def times(num1: Int,num2: Int):Int = {num1*num2}
+def concat(num1: Int,str1: String):String = str1 + num1
+
+// Multiply everything in a list together and return sum
+def productList(list: List[Double]): Double = list match {
+  case Nil => 1
+  case head::tail => head * productList(tail)
+}
+
+// Tail Recursive Product
+def productListTail(list: List[Double], acc: Double): Double = list match {
+  case Nil => acc
+  case head::tail => productListTail(tail,head*acc)
+}
+
+// Accumulate using provided function
+def ourFoldLeft[A,B](list: List[A], acc:B)(f:(A,B)=>B):B = list match {
+  case Nil = acc
+  case head::tail => ourFoldLeft(tail,f(acc,head))(f)
+}
+
+// Lets try foldLeft(and probably foldRight too)!
+
+def productOurs(list: List[Int]) = ourFoldLeft(list,1)(times)
+
+def productLibrary(list: List[Int])= (list foldLeft 1)(times)
+
+productOurs(List(1,2,3,4))
+productLibrary(List(1,2,3,4))
+

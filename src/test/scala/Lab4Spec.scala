@@ -47,6 +47,14 @@ class Lab4InterpreterSpec extends FlatSpec {
   }
 
   // Probably want to write some more tests for typeInfer, substitute, and step.
+  class SemanticSpec extends FlatSpec {
+
+    "DoNeg" should "perform negation on its number arg" in {
+      assertResult(N(-42)) {
+        step(Unary(Neg, N(42)))
+      }
+    }
+  }
 
 }
 
